@@ -1,98 +1,306 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📦 Process Monitor SaaS - Asset Storage Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> Sistema SaaS para gerenciamento e upload de assets digitais com integração multi-cloud (Google Drive, OneDrive e armazenamento local)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Tecnologias
 
-## Description
+### Backend
+- **NestJS** - Framework Node.js
+- **TypeScript** - Linguagem
+- **Prisma** - ORM
+- **PostgreSQL** - Banco de dados
+- **Redis + BullMQ** - Sistema de filas
+- **WebSockets** - Real-time updates
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### Integrações
+- Google Drive API
+- Microsoft Graph (OneDrive)
+- Magic Link Authentication (JWT)
 
-## Project setup
+---
 
-```bash
-$ pnpm install
+## 📁 Arquitetura
+
+O projeto segue **Clean Architecture** com as seguintes camadas:
+
+```
+src/
+├── domain/              # Regras de negócio
+│   ├── entities/
+│   ├── repositories/
+│   ├── value-objects/
+│   └── exceptions/
+├── application/         # Casos de uso
+│   ├── use-cases/
+│   ├── dtos/
+│   └── ports/
+├── infrastructure/      # Implementações externas
+│   ├── controllers/
+│   ├── services/
+│   ├── adapters/
+│   │   ├── database/
+│   │   ├── queue/
+│   │   ├── storage/
+│   │   ├── email/
+│   │   └── oauth/
+│   ├── guards/
+│   ├── decorators/
+│   ├── filters/
+│   ├── interceptors/
+│   └── modules/
+├── config/             # Configurações
+└── shared/             # Código compartilhado
+    ├── constants/
+    ├── types/
+    ├── utils/
+    └── interfaces/
 ```
 
-## Compile and run the project
+---
 
+## 🛠️ Instalação
+
+### 1. Clone o repositório
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+git clone <repository-url>
+cd process-monitor-saas
 ```
 
-## Run tests
-
+### 2. Instale as dependências
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+npm install
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### 3. Configure as variáveis de ambiente
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+cp .env.example .env
+# Edite o arquivo .env com suas credenciais
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 4. Suba os containers Docker (PostgreSQL + Redis)
+```bash
+npm run docker:dev
+```
 
-## Resources
+### 5. Execute as migrations do Prisma
+```bash
+npm run prisma:migrate
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### 6. Popule o banco com dados iniciais (seed)
+```bash
+npm run prisma:seed
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 7. Inicie o servidor de desenvolvimento
+```bash
+npm run start:dev
+```
 
-## Support
+A aplicação estará disponível em: `http://localhost:3000`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## 📜 Scripts Disponíveis
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Desenvolvimento
+```bash
+npm run start:dev       # Inicia em modo desenvolvimento com hot-reload
+npm run start:debug     # Inicia em modo debug
+```
 
-## License
+### Build & Produção
+```bash
+npm run build           # Compila o projeto
+npm run start:prod      # Inicia em modo produção
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Prisma
+```bash
+npm run prisma:generate # Gera o Prisma Client
+npm run prisma:migrate  # Cria e aplica migrations
+npm run prisma:studio   # Abre o Prisma Studio (GUI)
+npm run prisma:seed     # Popula o banco com dados iniciais
+```
+
+### Docker
+```bash
+npm run docker:dev        # Sobe containers de desenvolvimento (DB + Redis)
+npm run docker:dev:down   # Para containers de desenvolvimento
+npm run docker:prod       # Sobe containers de produção (completo)
+npm run docker:prod:down  # Para containers de produção
+npm run docker:build      # Reconstrói as imagens
+```
+
+### Testes & Qualidade
+```bash
+npm run test            # Executa testes unitários
+npm run test:watch      # Testes em modo watch
+npm run test:cov        # Testes com cobertura
+npm run lint            # Executa o linter
+npm run format          # Formata o código com Prettier
+```
+
+---
+
+## 🐳 Docker
+
+### Docker Compose - Desenvolvimento
+```bash
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+Serviços disponíveis:
+- **PostgreSQL**: `localhost:5432`
+- **Redis**: `localhost:6379`
+- **BullMQ Board**: `localhost:3001` (monitoramento de filas)
+
+### Docker Compose - Produção
+```bash
+docker-compose up -d
+```
+
+Serviços incluem backend completo + dependências.
+
+---
+
+## 🗄️ Banco de Dados
+
+### Schema Principal
+
+#### Users
+- Sistema de whitelist (apenas emails cadastrados)
+- Magic Link authentication
+
+#### Storage Providers
+- Google Drive
+- OneDrive
+- Local Storage
+
+#### Uploads & Files
+- Sistema de filas
+- Tracking de progresso
+- Retry automático
+
+### Visualizar Banco (Prisma Studio)
+```bash
+npm run prisma:studio
+```
+
+Acesse: `http://localhost:5555`
+
+---
+
+## 🔐 Autenticação
+
+### Magic Link Flow
+
+1. Usuário informa email
+2. Sistema valida se email está na whitelist
+3. Envia email com link mágico (token JWT)
+4. Token expira em 15 minutos
+5. Login gera JWT de sessão (válido por 7 dias)
+
+### Emails Autorizados (Seed)
+- `admin@processmonitor.com`
+- `user1@example.com`
+- `user2@example.com`
+- `test@example.com`
+
+---
+
+## 🌐 API Endpoints
+
+### Health Check
+```
+GET /api/health
+```
+
+### Autenticação
+```
+POST /api/auth/magic-link    # Solicita magic link
+POST /api/auth/verify        # Verifica token e faz login
+POST /api/auth/logout        # Logout
+```
+
+### Storage Providers
+```
+GET  /api/providers           # Lista providers do usuário
+POST /api/providers/google    # Conecta Google Drive
+POST /api/providers/microsoft # Conecta OneDrive
+```
+
+### Uploads
+```
+POST /api/uploads             # Cria novo upload
+GET  /api/uploads/:id         # Status do upload
+GET  /api/uploads/:id/files   # Lista arquivos do upload
+```
+
+---
+
+## 🔄 Sistema de Filas
+
+### BullMQ + Redis
+
+**Filas disponíveis:**
+- `upload-queue`: Processamento de uploads
+- `email-queue`: Envio de emails
+
+**Monitoramento:**
+- BullMQ Board: `http://localhost:3001`
+
+---
+
+## 🎯 Roadmap
+
+### ✅ Fase 1 - Fundação (Atual)
+- [x] Setup inicial do projeto
+- [x] Docker + PostgreSQL + Redis
+- [x] Prisma configurado
+- [x] Clean Architecture estruturada
+- [ ] Autenticação Magic Link
+- [ ] CRUD de usuários
+
+### 🚧 Fase 2 - Integrações
+- [ ] Google Drive OAuth + Upload
+- [ ] OneDrive OAuth + Upload
+- [ ] Local Storage
+
+### 🎨 Fase 3 - Upload System
+- [ ] Sistema de filas (BullMQ)
+- [ ] Upload chunked/resumable
+- [ ] Progress tracking
+- [ ] WebSockets (real-time)
+
+### 🚀 Fase 4 - Features Avançadas
+- [ ] Upload de pastas (recursive)
+- [ ] Retry automático
+- [ ] Deduplicação de arquivos
+- [ ] Analytics
+
+---
+
+## 📝 Licença
+
+MIT
+
+---
+
+## 👥 Contribuindo
+
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feature/nova-feature`)
+5. Abra um Pull Request
+
+---
+
+## 📧 Contato
+
+Para dúvidas ou sugestões, abra uma issue no repositório.
+
+---
+
+**Feito com ❤️ usando NestJS + Clean Architecture**
