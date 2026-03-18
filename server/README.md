@@ -259,7 +259,7 @@ GET  /api/uploads/:id/files   # Lista arquivos do upload
 - [x] Docker + PostgreSQL + Redis
 - [x] Prisma configurado
 - [x] Clean Architecture estruturada
-- [ ] Autenticação Magic Link
+- [x] Autenticação Magic Link
 - [ ] CRUD de usuários
 
 ### 🚧 Fase 2 - Integrações
